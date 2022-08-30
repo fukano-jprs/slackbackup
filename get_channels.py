@@ -7,14 +7,16 @@ import codecs
 import configparser
 from datetime import date
 
+varbose=0
 config = configparser.ConfigParser()
 config.read(os.getenv('SLACKBACKUPCONF', os.path.dirname(__file__)+'/get_channels.ini'))
-print(os.path.dirname(__file__)+'/get_channels.ini')
+if varbose:
+    print(os.path.dirname(__file__)+'/get_channels.ini')
 # アドレス取得 チャンネルリスト
 url_converlist = "https://slack.com/api/conversations.list"
 # アドレス取得 各チャンネルの履歴
 url_converhist = "https://slack.com/api/conversations.history"
-#
+# アドレス取得 ユーザーリスト
 url_userlist   = "https://slack.com/api/users.list"
 # トークン
 token=''
@@ -35,7 +37,8 @@ else:
 
 if not os.path.isdir(work_dir):
     os.mkdir(work_dir)
-#
+
+#　ユーザーリストの保存
 response_json = requests.get(
                     url_userlist,
                     headers=headers).json()
@@ -71,7 +74,8 @@ channel_json = json.dumps(
                     response_json, 
                     indent = 2)
 # 取得内容をチラ見
-print(channel_json)
+if varbose:
+    print(channel_json)
 # 例 ： 
 # {
 #   "ok": true,
@@ -113,7 +117,8 @@ channel_json_out = json.dumps(
                     ensure_ascii= False, 
                     indent      = 2)
 # 出力内容をチラ見
-print(channel_json_out)
+if varbose:
+    print(channel_json_out)
 
 # 取得したチャンネルを指定ファイルに書き込むます
 path = os.path.join(work_dir, "channels.json")
@@ -172,7 +177,8 @@ for channelhist_itr in channelhist_dict:
     messages = response_json["messages"]
 
     # メッセージ内容をチラ見
-    print(messages)
+    if varbose:
+        print(messages)
 
     # 辞書キーでソートして日本語表記をそのまま出力、indentを見やすく整形
     # sort_keys    : True 出力が辞書のキーでソートされる
@@ -185,7 +191,8 @@ for channelhist_itr in channelhist_dict:
                         indent      = 2)
 
     # 各チャンネル履歴をチラ見
-    print(channelhist_json)
+    if varbose:
+        print(channelhist_json)
 
     # 各チャンネルフォルダに履歴用を記載するjsonを定義
     # 誤操作でファイル名を上書き防止するのため、チャンネルidも付与
