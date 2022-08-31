@@ -8,10 +8,11 @@ import configparser
 from datetime import date
 
 varbose=0
+script_dir=os.path.dirname(os.path.abspath(__file__))
 config = configparser.ConfigParser()
-config.read(os.getenv('SLACKBACKUPCONF', os.path.dirname(__file__)+'/get_channels.ini'))
+config.read(os.getenv('SLACKBACKUPCONF', script_dir+'/get_channels.ini'))
 if varbose:
-    print(os.path.dirname(__file__)+'/get_channels.ini')
+    print(script_dir+'/get_channels.ini')
 # アドレス取得 チャンネルリスト
 url_converlist = "https://slack.com/api/conversations.list"
 # アドレス取得 各チャンネルの履歴
@@ -33,7 +34,7 @@ work_dir=''
 if 'ExportRoot' in config['DEFAULT']:
     work_dir = config['DEFAULT']['ExportRoot']+"/"+date.today().isoformat()
 else:
-    work_dir = os.path.dirname(__file__)+'/../export/'+date.today().isoformat()
+    work_dir = script_dir+'/../export/'+date.today().isoformat()
 
 if not os.path.isdir(work_dir):
     os.mkdir(work_dir)
